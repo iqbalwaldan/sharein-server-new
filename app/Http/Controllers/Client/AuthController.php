@@ -25,11 +25,11 @@ class AuthController extends Controller
         }
         return view('client.user.auth.login.index');
     }
-    
+
     public function login(Request $request)
     {
         setcookie('facebookData', '', time() + (86400 * 30), "/");
-        
+
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -49,10 +49,8 @@ class AuthController extends Controller
             // Save the session token in a cookie
             setcookie('tokenlogin', $sessionToken, time() + (86400 * 30), "/"); // Cookie will expire in 30 days
 
-            if (!isset($_COOKIE['facebookData'])) {
-                // Set cookie
-                setcookie('facebookData', DashboardController::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
-            }
+            // Set cookie
+            setcookie('facebookData', DashboardController::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
 
             return redirect()->intended('/dashboard');
         }
