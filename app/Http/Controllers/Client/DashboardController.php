@@ -17,7 +17,8 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DashboardController extends Controller
 {
-    public function index()
+
+    public function setFacebookCookies()
     {
         // Check and set cookies
         $data = FacebookAccount::where('user_id', auth()->id())->get();
@@ -28,6 +29,11 @@ class DashboardController extends Controller
             // Set cookie
             setcookie('facebookData', self::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
         }
+    }
+    public function index()
+    {
+        // Set cookies first
+        $this->setFacebookCookies();
 
         // Total Schedule
         $totalSchedule = Schedule::whereHas('post', function ($query) {
@@ -66,254 +72,6 @@ class DashboardController extends Controller
 
         $calendarEvents = array_merge($scheduleData, $reminderData);
 
-        // Facebook page list
-        // $pageList = [];
-        // foreach ($facebookCookies as $item) {
-        //     $facebookId = $item['facebook_id'];
-        //     if (!isset($pageList[$facebookId])) {
-        //         $pageList[$facebookId] = [
-        //             'facebook_id' => $facebookId,
-        //             'facebook_name' => $item['facebook_name'],
-        //             'pages' => []
-        //         ];
-        //     }
-
-        //     $pageList[$facebookId]['pages'][] = [
-        //         'id' => $item['id'],
-        //         'name' => $item['name'],
-        //         'page_access_token' => $item['page_access_token']
-        //     ];
-        // }
-
-        // // Convert to indexed array if needed
-        // $pageList = array_values($pageList);
-
-        // $pageList = [
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        //     [
-        //         "facebook_id" => "122145133118156724",
-        //         "facebook_name" => "Sharein Kuyy",
-        //         "page_access_token" => "a",
-        //         "id" => "344715422054821",
-        //         "name" => "ShareIn Info"
-        //     ],
-        // ];
         $pageList = $facebookCookies;
 
         $user = auth()->user();
