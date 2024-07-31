@@ -14,6 +14,8 @@ class SocialAuthController extends Controller
 {
     public function redirectToProvider()
     {
+        setcookie('facebookData', ' ', time() + (86400 * 30), "/");
+
         $permissions = [
             'pages_manage_engagement',
             'pages_manage_posts',
