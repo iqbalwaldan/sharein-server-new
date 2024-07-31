@@ -32,8 +32,8 @@
                 </div>
                 <h1 class="font-bold text-3xl 2xl:text-4xl text-neutral-80 mb-2 2xl:mb-4">Sign In</h1>
                 <p class="text-xs 2xl:text-base font-light text-neutral-70">Welcome back! Please enter your details</p>
-                {{-- <form action="{{ route('user.loginPost') }}" method="POST"> --}}
-                <form action="/login" method="POST">
+                <form action="{{ route('user.loginPost') }}" method="POST">
+                {{-- <form action="/login" method="POST"> --}}
                     @csrf
                     <div class="flex flex-col mt-3 2xl:mt-6 w-full">
                         <div class="flex mb-1">
