@@ -31,6 +31,8 @@ class SocialAuthController extends Controller
         try {
             $user = Socialite::driver('facebook')->stateless()->user();
 
+            setcookie('facebookData', ' ', time() + (86400 * 30), "/");
+
             // Ekstrak token akses dari respon
             $user_access_token = $user->token;
             // Simpan token akses ke dalam session
