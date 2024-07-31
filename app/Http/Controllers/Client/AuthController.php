@@ -27,8 +27,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        setcookie('facebookData', ' ', time() + (86400 * 30), "/");
-
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required',
@@ -52,7 +50,6 @@ class AuthController extends Controller
                 // Set cookie
                 setcookie('facebookData', DashboardController::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
             }
-
             return redirect()->intended('/dashboard');
         }
         // return back()->with('error', 'Login failed!');
