@@ -22,7 +22,7 @@ class DashboardController extends Controller
         // Check and set cookies
         $data = FacebookAccount::where('user_id', auth()->id())->get();
         if ($data->isEmpty()) {
-            Cookie::queue(Cookie::forget('facebookData'));
+            setcookie('facebookData', '', time() + (86400 * 30), "/"); // Cookie will expire in 30 days
         }
         if (!isset($_COOKIE['facebookData'])) {
             // Set cookie
