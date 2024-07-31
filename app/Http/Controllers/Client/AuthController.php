@@ -20,14 +20,14 @@ class AuthController extends Controller
 {
     public function indexLogin()
     {
-        setcookie('facebookData', '', time() + (86400 * 30), "/");
+        setcookie('facebookData', ' ', time() + (86400 * 30), "/");
 
         return view('client.user.auth.login.index');
     }
 
     public function login(Request $request)
     {
-        setcookie('facebookData', '', time() + (86400 * 30), "/");
+        setcookie('facebookData', ' ', time() + (86400 * 30), "/");
 
         $credentials = $request->validate([
             'email' => 'required|email',
