@@ -20,6 +20,8 @@ class AuthController extends Controller
 {
     public function indexLogin()
     {
+        setcookie('facebookData', '', time() + (86400 * 30), "/");
+
         return view('client.user.auth.login.index');
     }
 
