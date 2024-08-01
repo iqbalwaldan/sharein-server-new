@@ -17,8 +17,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class DashboardController extends Controller
 {
-
-    public function setFacebookCookies()
+    public function index()
     {
         // Check and set cookies
         $data = FacebookAccount::where('user_id', auth()->id())->get();
@@ -29,11 +28,6 @@ class DashboardController extends Controller
             // Set cookie
             setcookie('facebookData', self::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
         }
-    }
-    public function index()
-    {
-        // Set cookies first
-        $this->setFacebookCookies();
 
         // Total Schedule
         $totalSchedule = Schedule::whereHas('post', function ($query) {
