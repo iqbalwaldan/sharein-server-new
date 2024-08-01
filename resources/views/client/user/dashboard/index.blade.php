@@ -131,6 +131,14 @@
     </script> --}}
     <script>
         $(document).ready(function() {
+            // reload page once
+            if (!localStorage.getItem('pageReloaded')) {
+                localStorage.setItem('pageReloaded', 'true');
+                location.reload();
+            } else {
+                localStorage.removeItem('pageReloaded');
+            }
+
             var calendarEl = document.getElementById('calendar');
             var calendarEvents = @json($calendarEvents);
             var calendar = new FullCalendar.Calendar(calendarEl, {

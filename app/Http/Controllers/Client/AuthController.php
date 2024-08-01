@@ -49,10 +49,6 @@ class AuthController extends Controller
             // Save the session token in a cookie
             setcookie('tokenlogin', $sessionToken, time() + (86400 * 30), "/"); // Cookie will expire in 30 days
 
-            // Set cookie facebookData dengan data dari fetchFacebookData
-            $facebookData = DashboardController::fetchFacebookData();
-            setcookie('facebookData', $facebookData, time() + (86400 * 30), "/"); // Cookie will expire in 30 days
-
             return redirect()->intended('/dashboard');
         }
         // return back()->with('error', 'Login failed!');
