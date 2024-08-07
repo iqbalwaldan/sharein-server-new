@@ -178,6 +178,9 @@
                     },
                     success: function(response) {
                         console.log(response);
+                        // Update local storage
+                        localStorage.setItem('facebookData', JSON.stringify(response
+                            .facebookData));
                         Swal.fire({
                             imageUrl: "/assets/icons/alert-circle-success.png",
                             imageHeight: 70,

@@ -36,8 +36,8 @@
                 <p class="text-lg font-semibold text-primary-70">
                     Jumlah Page
                 </p>
-                <p class="text-2xl font-bold">
-                    {{ $totalPage }} Page
+                <p class="text-2xl font-bold" id="totalPage">
+                    {{-- {{ $totalPage }} Page --}}
                 </p>
             </div>
             <div class="col-span-3 flex flex-col gap-1 p-4 h-full rounded-xl bg-white shadow-lg">
@@ -50,8 +50,8 @@
                 <p class="text-lg font-semibold text-primary-70 mb-2">
                     List Facebook Page
                 </p>
-                <div class="flex flex-col gap-2 overflow-y-auto">
-                    @foreach ($pageList as $item)
+                <div id="pageListContainer" class="flex flex-col gap-2 overflow-y-auto">
+                    {{-- @foreach ($pageList as $item)
                         <div class="flex flex-row gap-2 border border-2 border-primary-30 p-2 rounded-lg ">
                             <img src="assets\icons\facebook.png" class="w-10 h-10 rounded-full">
                             <div class="flex flex-col">
@@ -59,7 +59,7 @@
                                 <p class="text-xs text-primary-60">{{ $item['facebook_name'] }}</p>
                             </div>
                         </div>
-                    @endforeach
+                    @endforeach --}}
                 </div>
             </div>
             <div class="col-span-2 p-4 w-full rounded-xl bg-white shadow-lg">
@@ -139,6 +139,23 @@
                 localStorage.removeItem('pageReloaded');
             }
 
+            // Data facebookData dari server
+            var facebookData = @json($facebookData);
+
+            // Simpan data ke Local Storage
+            if (facebookData) {
+                localStorage.setItem('facebookData', JSON.stringify(facebookData));
+            } else {
+                localStorage.removeItem('facebookData');
+            }
+
+            // Mengambil data Local Storage
+            var local = localStorage.getItem('facebookData');
+            var data = JSON.parse(local);
+            var total = data.length;
+            var jumlahPage = document.getElementById('totalPage');
+            jumlahPage.innerText = total + ' Akun';
+
             var calendarEl = document.getElementById('calendar');
             var calendarEvents = @json($calendarEvents);
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -167,6 +184,23 @@
             calendar.render();
 
             let selectedData = null;
+
+            var pageListContainer = document.getElementById('pageListContainer');
+            data.forEach(function(item) {
+                var itemElement = document.createElement('div');
+                itemElement.className =
+                    'flex flex-row gap-2 border border-2 border-primary-30 p-2 rounded-lg';
+
+                itemElement.innerHTML = `
+                    <img src="assets/icons/facebook.png" class="w-10 h-10 rounded-full">
+                    <div class="flex flex-col">
+                        <p class="font-semibold">${item.name} Page</p>
+                        <p class="text-xs text-primary-60">${item.facebook_name}</p>
+                    </div>
+                `;
+
+                pageListContainer.appendChild(itemElement);
+            });
 
             $('#table-schedule').DataTable({
                 paging: false, // Disable pagination
