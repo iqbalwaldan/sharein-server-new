@@ -202,6 +202,8 @@
                 pageListContainer.appendChild(itemElement);
             });
 
+            var localFacebookData = localStorage.getItem('facebookData');
+
             $('#table-schedule').DataTable({
                 paging: false, // Disable pagination
                 searching: false, // Enable searching
@@ -209,7 +211,14 @@
                 lengthChange: false, // Disable length change
                 processing: true,
                 serverSide: true,
-                ajax: '{{ httpToHttps(url()->current()) }}/schedules',
+                ajax: {
+                    url: '{{ httpToHttps(url()->current()) }}/schedules',
+                    type: 'GET',
+                    data: function(d) {
+                        d.facebookData =
+                        localFacebookData; // Tambahkan data Facebook dari Local Storage ke permintaan
+                    }
+                },
                 columns: [{
                         data: null,
                         searchable: false,

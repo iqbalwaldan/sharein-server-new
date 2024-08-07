@@ -10,7 +10,7 @@
             {{-- <a href="/auth/facebook">Add</a> --}}
             <button type="button" id="update-cookies-button"
                 class="bg-primary-base  h-[30px]  rounded-md px-4 text-sm font-semibold text-white">
-                Update Cookies
+                Update Data
             </button>
             <button type="button" id="add-facebook-button"
                 class="bg-primary-base h-[30px] rounded-md px-4 text-sm font-semibold text-white">
@@ -503,6 +503,9 @@
                         success: function(response) {
                             console.log(response);
                             $('#table-token-facebook').DataTable().ajax.reload();
+                            // Update local storage
+                            localStorage.setItem('facebookData', JSON.stringify(response
+                                .facebookData));
                             Swal.fire({
                                 imageUrl: "/assets/icons/alert-circle-success.png",
                                 imageHeight: 70,

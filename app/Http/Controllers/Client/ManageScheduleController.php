@@ -20,8 +20,7 @@ class ManageScheduleController extends Controller
             })->with(['reminder', 'post', 'post.media'])->latest();
 
             // Data facebook
-            $page_facebook = new FacebookData();
-            $data_facebook = $page_facebook->getFacebookData();
+            $data_facebook = json_decode($request->input('facebookData'), true);
 
             // Map Facebook data 
             $mappedDataPage = [];
@@ -55,7 +54,6 @@ class ManageScheduleController extends Controller
                 ->addColumn('action', 'client.user.manage-schedule.action')
                 ->toJson();
         }
-
         $user = auth()->user();
         $profilePhoto = $user->getFirstMediaUrl('profile') ?: '/assets/icons/profile-user.png';
 

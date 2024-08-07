@@ -154,6 +154,7 @@
                 $('#last_name').val('{{ auth()->user()->last_name }}').removeClass(['border-red-500',
                     'border-green-500'
                 ]);
+                $('#file_input').val('');
                 $('#email').val('{{ auth()->user()->email }}').removeClass(['border-red-500', 'border-green-500']);
                 $('#phone_number').val('{{ auth()->user()->phone_number }}').removeClass(['border-red-500',
                     'border-green-500'

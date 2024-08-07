@@ -74,7 +74,8 @@ class FacebookAccountController extends Controller
         $facebook = FacebookAccount::find($id);
         $facebook->delete();
         // check cookie
-        self::updateCookies();
+        $facebookData = self::updateCookies();
+        return $facebookData;
     }
 
     public static function updateCookies()

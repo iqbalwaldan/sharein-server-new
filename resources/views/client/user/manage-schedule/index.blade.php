@@ -246,6 +246,7 @@
     <script>
         $(document).ready(function() {
             let selectedData = null;
+            var localFacebookData = localStorage.getItem('facebookData');
 
             $('#table-schedule').DataTable({
                 paging: true, // Disable pagination
@@ -254,7 +255,14 @@
                 lengthChange: true, // Disable length change
                 processing: true,
                 serverSide: true,
-                ajax: '{{ httpToHttps(url()->current()) }}',
+                ajax: {
+                    url: '{{ httpToHttps(url()->current()) }}',
+                    type: 'GET',
+                    data: function(d) {
+                        d.facebookData =
+                        localFacebookData; // Tambahkan data Facebook dari Local Storage ke permintaan
+                    }
+                },
                 columns: [{
                         data: null,
                         searchable: false,
@@ -721,48 +729,4 @@
                 'none'; // Sembunyikan tombol "Hapus Gambar"
         }
     </script>
-    <!-- <script>
-        $(document).ready(function() {
-            // Assuming you have selectedData variable available in the scope where you want to set the value
-            var selectedData = {
-                post: {
-                    page_id: ["1", "2", "3"], // Example data, replace with actual data
-                    caption: "Example caption" // Example caption, replace with actual data
-                }
-            };
-
-            // Initialize TomSelect
-            var facebookPageSelect = new TomSelect('#facebook-page', {
-                plugins: ['remove_button'],
-                create: false,
-                maxOptions: 100,
-                onDropdownOpen: () => {
-                    document.querySelector('.ts-dropdown').classList.add('max-h-56', 'overflow-auto');
-                }
-            });
-
-            // Function to fetch data and populate Tom Select
-            function populateFacebookPageSelect() {
-                fetch("{{ route('get.facebook.data') }}")
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach(item => {
-                            facebookPageSelect.addOption({
-                                value: item.id,
-                                text: item.name
-                            });
-                        });
-                        facebookPageSelect.refreshOptions();
-                        // Set selected options based on selectedData
-                        facebookPageSelect.setValue(selectedData.post.page_id);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                    });
-            }
-
-            // Populate Facebook Page Select on document ready
-            populateFacebookPageSelect();
-        });
-    </script> -->
 @endsection

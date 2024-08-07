@@ -41,11 +41,6 @@ class DashboardController extends Controller
         // Total Account
         $totalAccount = FacebookAccount::where('user_id', auth()->id())->count();
 
-        // Total Page
-        $facebookCookies = self::getFacebookData();
-        // dd($facebookCookies);
-        $totalPage = count($facebookCookies);
-
         // Calendar events
         $userId = auth()->id();
         $scheduleData = DB::select("
@@ -67,8 +62,6 @@ class DashboardController extends Controller
 
         $calendarEvents = array_merge($scheduleData, $reminderData);
 
-        $pageList = $facebookCookies;
-
         $user = auth()->user();
         $profilePhoto = $user->getFirstMediaUrl('profile') ?: '/assets/icons/profile-user.png';
 
@@ -78,9 +71,7 @@ class DashboardController extends Controller
             'totalSchedule' => $totalSchedule,
             'totalReminder' => $totalReminder,
             'totalAccount' => $totalAccount,
-            // 'totalPage' => $totalPage,
             'calendarEvents' => $calendarEvents,
-            'pageList' => $pageList,
             'profilePhoto' => $profilePhoto,
             'facebookData' => $facebookData,
         ]);
@@ -96,9 +87,10 @@ class DashboardController extends Controller
                 ->join('posts', 'posts.id', '=', 'schedules.post_id')
                 ->orderBy('post_time', 'asc')->limit(5);
 
-            $facebookCookies = self::getFacebookData();
+            $data_facebook = json_decode($request->input('facebookData'), true);
+
             $mappedDataPage = [];
-            foreach ($facebookCookies as $value) {
+            foreach ($data_facebook as $value) {
                 $mappedDataPage[$value['id']] = $value['name'];
             }
 
