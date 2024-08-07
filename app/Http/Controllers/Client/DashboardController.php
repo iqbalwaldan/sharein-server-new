@@ -21,13 +21,14 @@ class DashboardController extends Controller
     {
         // Check and set cookies
         $data = FacebookAccount::where('user_id', auth()->id())->get();
-        if ($data->isEmpty()) {
-            setcookie('facebookData', '', time() + (86400 * 30), "/"); // Cookie will expire in 30 days
-        }
-        if (!isset($_COOKIE['facebookData'])) {
-            // Set cookie
-            setcookie('facebookData', self::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
-        }
+        // if ($data->isEmpty()) {
+        //     setcookie('facebookData', '', time() + (86400 * 30), "/"); // Cookie will expire in 30 days
+        // }
+        // if (!isset($_COOKIE['facebookData'])) {
+        //     // Set cookie
+        //     setcookie('facebookData', self::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
+        // }
+        $facebookData = $data->isEmpty() ? null : DashboardController::fetchFacebookData();
 
         // Total Schedule
         $totalSchedule = Schedule::whereHas('post', function ($query) {
@@ -77,10 +78,11 @@ class DashboardController extends Controller
             'totalSchedule' => $totalSchedule,
             'totalReminder' => $totalReminder,
             'totalAccount' => $totalAccount,
-            'totalPage' => $totalPage,
+            // 'totalPage' => $totalPage,
             'calendarEvents' => $calendarEvents,
             'pageList' => $pageList,
             'profilePhoto' => $profilePhoto,
+            'facebookData' => $facebookData,
         ]);
     }
 
@@ -181,11 +183,12 @@ class DashboardController extends Controller
         }
 
         // Encode data
-        $dataEncode = json_encode($facebookData);
+        // $dataEncode = json_encode($facebookData);
         // Encode data to base64
         // $base64Data = base64_encode($dataEncode);
         // return $base64Data;
-        return $dataEncode;
+        // return $dataEncode;
+        return $facebookData;
     }
 
     public static function getFacebookData()
