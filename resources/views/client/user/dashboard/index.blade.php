@@ -37,7 +37,7 @@
                     Jumlah Page
                 </p>
                 <p class="text-2xl font-bold" id="totalPage">
-                    {{-- {{ $totalPage }} Page --}}
+                    0 Page
                 </p>
             </div>
             <div class="col-span-3 flex flex-col gap-1 p-4 h-full rounded-xl bg-white shadow-lg">
@@ -139,6 +139,8 @@
                 localStorage.removeItem('pageReloaded');
             }
 
+            let selectedData = null;
+
             // Data facebookData dari server
             var facebookData = @json($facebookData);
 
@@ -152,15 +154,19 @@
             // Mengambil data Local Storage
             var local = localStorage.getItem('facebookData');
             var data = JSON.parse(local);
-            var total = data.length;
+            var total = 0;
+            if (data) {
+                total = data.length;
+            }
             var jumlahPage = document.getElementById('totalPage');
-            jumlahPage.innerText = total + ' Akun';
+            jumlahPage.innerText = total + ' Page';
 
             var calendarEl = document.getElementById('calendar');
+            var today = new Date().toISOString().slice(0, 10);
             var calendarEvents = @json($calendarEvents);
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                initialDate: '2024-06-12',
+                initialDate: today,
                 eventColor: '#2652FF',
                 height: 610,
                 events: calendarEvents,
@@ -183,26 +189,34 @@
             });
             calendar.render();
 
-            let selectedData = null;
-
             var pageListContainer = document.getElementById('pageListContainer');
-            data.forEach(function(item) {
+            if (data) {
+                data.forEach(function(item) {
+                    var itemElement = document.createElement('div');
+                    itemElement.className =
+                        'flex flex-row gap-2 border border-2 border-primary-30 p-2 rounded-lg';
+
+                    itemElement.innerHTML = `
+                        <img src="assets/icons/facebook.png" class="w-10 h-10 rounded-full">
+                        <div class="flex flex-col">
+                            <p class="font-semibold">${item.name} Page</p>
+                            <p class="text-xs text-primary-60">${item.facebook_name}</p>
+                        </div>
+                    `;
+
+                    pageListContainer.appendChild(itemElement);
+                });
+            } else {
                 var itemElement = document.createElement('div');
                 itemElement.className =
-                    'flex flex-row gap-2 border border-2 border-primary-30 p-2 rounded-lg';
+                    'flex flex-row justify-center items-center border-t border-b border-primary-30 p-2';
 
                 itemElement.innerHTML = `
-                    <img src="assets/icons/facebook.png" class="w-10 h-10 rounded-full">
-                    <div class="flex flex-col">
-                        <p class="font-semibold">${item.name} Page</p>
-                        <p class="text-xs text-primary-60">${item.facebook_name}</p>
-                    </div>
-                `;
+                    <p class="font-normal">No data available</p>
+                    `;
 
                 pageListContainer.appendChild(itemElement);
-            });
-
-            var localFacebookData = localStorage.getItem('facebookData');
+            }
 
             $('#table-schedule').DataTable({
                 paging: false, // Disable pagination
@@ -216,7 +230,7 @@
                     type: 'GET',
                     data: function(d) {
                         d.facebookData =
-                        localFacebookData; // Tambahkan data Facebook dari Local Storage ke permintaan
+                            local; // Tambahkan data Facebook dari Local Storage ke permintaan
                     }
                 },
                 columns: [{

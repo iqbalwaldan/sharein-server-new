@@ -246,7 +246,7 @@
     <script>
         $(document).ready(function() {
             let selectedData = null;
-            var localFacebookData = localStorage.getItem('facebookData');
+            var local = localStorage.getItem('facebookData');
 
             $('#table-schedule').DataTable({
                 paging: true, // Disable pagination
@@ -260,7 +260,7 @@
                     type: 'GET',
                     data: function(d) {
                         d.facebookData =
-                        localFacebookData; // Tambahkan data Facebook dari Local Storage ke permintaan
+                            local; // Tambahkan data Facebook dari Local Storage ke permintaan
                     }
                 },
                 columns: [{
@@ -495,29 +495,55 @@
 
             // Function to fetch data and populate Tom Select
             function populateFacebookPageSelect(selectedPageIds) {
-                fetch("{{ route('user.dashboard.getFacebookData') }}")
-                    .then(response => response.json())
-                    .then(jsonData => {
-                        // Add each item to the Tom Select
-                        jsonData.forEach(item => {
-                            facebookPageSelect.addOption({
-                                value: item.id,
-                                text: item.name
-                            });
-                        });
+                // Cek apakah data ada di Local Storage
+                if (local) {
+                    // Parse data dari JSON menjadi array
+                    var jsonData = JSON.parse(local);
 
-                        // Refresh options
-                        facebookPageSelect.refreshOptions();
-                        // Set selected options based on selectedData
-                        facebookPageSelect.setValue(selectedPageIds);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
+                    // Tambahkan setiap item ke Tom Select
+                    jsonData.forEach(item => {
+                        facebookPageSelect.addOption({
+                            value: item.id,
+                            text: item.name
+                        });
                     });
+
+                    // Refresh options
+                    facebookPageSelect.refreshOptions();
+                    // Set selected options based on selectedData
+                    if (selectedPageIds) {
+                        facebookPageSelect.setValue(selectedPageIds);
+                    }
+                } else {
+                    console.error('No facebook data found in local storage');
+                }
             }
 
-            // Populate Facebook Page Select on document ready
-            populateFacebookPageSelect();
+            // // Function to fetch data and populate Tom Select
+            // function populateFacebookPageSelect(selectedPageIds) {
+            //     fetch("{{ route('user.dashboard.getFacebookData') }}")
+            //         .then(response => response.json())
+            //         .then(jsonData => {
+            //             // Add each item to the Tom Select
+            //             jsonData.forEach(item => {
+            //                 facebookPageSelect.addOption({
+            //                     value: item.id,
+            //                     text: item.name
+            //                 });
+            //             });
+
+            //             // Refresh options
+            //             facebookPageSelect.refreshOptions();
+            //             // Set selected options based on selectedData
+            //             facebookPageSelect.setValue(selectedPageIds);
+            //         })
+            //         .catch(error => {
+            //             console.error('Error fetching data:', error);
+            //         });
+            // }
+
+            // // Populate Facebook Page Select on document ready
+            // populateFacebookPageSelect();
 
             $('#facebook-page').on('input', function() {
                 var errorMessage = $('#facebook-page-error');
@@ -531,14 +557,38 @@
                     'Caption cannot be empty');
             });
 
+            function getPageAccessToken(pageId) {
+                // Cek apakah data ada di Local Storage
+                if (local) {
+                    // Parse data dari JSON menjadi array
+                    var jsonData = JSON.parse(local);
+
+                    // Looping melalui data untuk mencari page_access_token berdasarkan id
+                    for (var i = 0; i < jsonData.length; i++) {
+                        if (jsonData[i].id === pageId) {
+                            return jsonData[i].page_access_token; // Return the token if id matches
+                        }
+                    }
+
+                    // Jika ID tidak ditemukan
+                    console.error('Page ID not found in local storage');
+                    return null;
+                } else {
+                    console.error('No facebook data found in local storage');
+                    return null;
+                }
+            }
+
             // Update Post using AJAX
             $('#submit-button-edit').on('click', function(e) {
                 e.preventDefault();
                 var isValid = true;
+                var pageToken = getPageAccessToken($('#facebook-page').val());
                 if (selectedData) {
                     var formData = new FormData();
 
                     formData.append('page_id', $('#facebook-page').val());
+                    formData.append('page_token', pageToken);
                     formData.append('caption', $('#caption').val());
                     formData.append('_token', '{{ csrf_token() }}');
                     formData.append('_method', 'PATCH');
@@ -610,7 +660,6 @@
             // Close modal edit
             $('#close-modal-edit').on('click', function() {
                 $('#modal-edit').addClass('hidden');
-                console.log("test")
                 // reset form   
                 document.getElementById('form-data').reset();
                 removeImage();

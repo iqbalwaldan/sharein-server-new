@@ -81,13 +81,20 @@ class DashboardController extends Controller
     {
         if ($request->ajax()) {
             // Schedule
+            
+            // Data facebook
+            $data_facebook = json_decode($request->input('facebookData'), true);
+
+            // Pastikan data_facebook adalah array
+            if (!is_array($data_facebook)) {
+                $data_facebook = [];
+            }
+
             $schedules = Schedule::whereHas('post', function ($query) {
                 $query->where('user_id', auth()->id())->where('status', 'scheduled');
             })
                 ->join('posts', 'posts.id', '=', 'schedules.post_id')
                 ->orderBy('post_time', 'asc')->limit(5);
-
-            $data_facebook = json_decode($request->input('facebookData'), true);
 
             $mappedDataPage = [];
             foreach ($data_facebook as $value) {

@@ -177,7 +177,6 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        console.log(response);
                         // Update local storage
                         localStorage.setItem('facebookData', JSON.stringify(response
                             .facebookData));
@@ -398,7 +397,6 @@
                             type: 'POST',
                             data: updatedData,
                             success: function(response) {
-                                console.log(response);
                                 $('#modal-edit').addClass('hidden');
                                 $('#table-token-facebook').DataTable().ajax.reload();
                                 $('#user-access-token-edit').val('');
@@ -501,7 +499,6 @@
                         url: url.replace('defaultId', selectedData.id),
                         type: 'DELETE',
                         success: function(response) {
-                            console.log(response);
                             $('#table-token-facebook').DataTable().ajax.reload();
                             // Update local storage
                             localStorage.setItem('facebookData', JSON.stringify(response

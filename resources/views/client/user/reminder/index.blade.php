@@ -393,7 +393,8 @@
                     _token: '{{ csrf_token() }}', // Make sure you include CSRF token
                     _method: 'POST' // Specify the method as POST
                 };
-                var url = '{{ route('user.reminder.store') }}';
+                // var url = '{{ route('user.reminder.store') }}';
+                var url = '{{ httpToHttps(url()->current()) }}';
 
                 var nameValid = isValidInput($('#name-add'), $('#name-add-error'),
                     $('#name-add').val() == '', 'Name Reminder cannot be empty');
