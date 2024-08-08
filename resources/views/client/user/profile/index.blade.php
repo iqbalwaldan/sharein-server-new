@@ -110,8 +110,12 @@
                                 <input id="password"
                                     class="border border-primary-40 p-3 text-neutral-70 focus:outline-none h-12 rounded-md text-sm font-light w-full"
                                     type="password" placeholder="your old password" />
+                                <button type="button" id="showPassword"
+                                    class="absolute right-3 top-3 text-primary-base font-light">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                                 <span id="password_check"
-                                    class="hidden absolute right-3 top-[25px] transform -translate-y-1/2 text-green-500"><i
+                                    class="hidden absolute right-10 top-[25px] transform -translate-y-1/2 text-green-500"><i
                                         class="fa-solid fa-circle-check"></i></span>
                             </div>
                         </div>
@@ -121,9 +125,11 @@
                                     New Password
                                 </p>
                             </label>
-                            <input id="new_password"
-                                class="border border-primary-40 p-3 text-neutral-70 focus:outline-none h-12 rounded-md text-sm font-light w-full focus:outline-none focus:ring-1 focus:ring-primary-base"
-                                type="text" placeholder="your new password" />
+                            <div class="relative">
+                                <input id="new_password"
+                                    class="border border-primary-40 p-3 text-neutral-70 focus:outline-none h-12 rounded-md text-sm font-light w-full focus:outline-none focus:ring-1 focus:ring-primary-base"
+                                    type="text" placeholder="your new password" />
+                            </div>
                         </div>
                     </div>
 
@@ -159,6 +165,8 @@
                 $('#phone_number').val('{{ auth()->user()->phone_number }}').removeClass(['border-red-500',
                     'border-green-500'
                 ]);
+                $('#password').val('');
+                $('#new_password').val('');
                 $('#password').removeClass(['border-red-500', 'border-green-500']);
 
                 $('#first_name_check').addClass('hidden');
@@ -364,8 +372,18 @@
                     });
                 }
             });
+        });
+        document.getElementById('showPassword').addEventListener('click', function() {
+            var passwordInput = document.getElementById('password');
+            var showPasswordButton = document.getElementById('showPassword');
 
-
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showPasswordButton.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+            } else {
+                passwordInput.type = 'password';
+                showPasswordButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
         });
     </script>
 @endsection

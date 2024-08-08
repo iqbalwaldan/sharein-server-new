@@ -47,7 +47,11 @@
                             <div class="relative">
                                 <input id="password" name="password"
                                     class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none h-12 rounded-md text-sm font-light w-full"
-                                    type="password" placeholder="your new password" />
+                                    id="password" type="password" placeholder="your new password" />
+                                <button type="button" id="showPassword"
+                                    class="absolute right-3 top-3 text-primary-base font-light">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                                 <span id="password_check"
                                     class="hidden absolute right-3 top-[25px] transform -translate-y-1/2 text-green-500"><i
                                         class="fa-solid fa-circle-check"></i></span>
@@ -64,6 +68,10 @@
                                 <input id="password_confirmation" name="password_confirmation"
                                     class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none h-12 rounded-md text-sm font-light w-full"
                                     type="password" placeholder="your confirm password" />
+                                <button type="button" id="showPasswordConfirmation"
+                                    class="absolute right-3 top-3 text-primary-base font-light">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                                 <span id="password_confirmation_check"
                                     class="hidden absolute right-3 top-[25px] transform -translate-y-1/2 text-green-500"><i
                                         class="fa-solid fa-circle-check"></i></span>
@@ -81,4 +89,32 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
+    <script>
+        document.getElementById('showPassword').addEventListener('click', function() {
+            var passwordInput = document.getElementById('password');
+            var showPasswordButton = document.getElementById('showPassword');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showPasswordButton.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+            } else {
+                passwordInput.type = 'password';
+                showPasswordButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+        document.getElementById('showPasswordConfirmation').addEventListener('click', function() {
+            var passwordConfirmationInput = document.getElementById('password_confirmation');
+            var showPasswordConfirmationButton = document.getElementById('showPasswordConfirmation');
+
+            if (passwordConfirmationInput.type === 'password') {
+                passwordConfirmationInput.type = 'text';
+                showPasswordConfirmationButton.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+            } else {
+                passwordConfirmationInput.type = 'password';
+                showPasswordConfirmationButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+    </script>
 @endsection
