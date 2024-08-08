@@ -49,7 +49,6 @@ class ReminderController extends Controller
             'description' => $request->description,
             'reminder_time' => $request->reminder_time,
         ]);
-        return redirect()->route('user.reminder.index');
     }
 
     public function update(Request $request, $id)
@@ -61,7 +60,6 @@ class ReminderController extends Controller
         ]);
         $reminder = Reminder::find($id);
         $reminder->update($request->all());
-        return redirect()->route('user.reminder.index');
     }
 
     public function sendReminder()
