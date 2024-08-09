@@ -184,8 +184,8 @@
                             imageUrl: "/assets/icons/alert-circle-success.png",
                             imageHeight: 70,
                             imageWidth: 70,
-                            title: "Successfully Update Cookies",
-                            text: "You have succesfully update cookies.",
+                            title: "Successfully Update Data Facebook",
+                            text: "You have succesfully update data facebook.",
                             confirmButtonText: "Okey",
                             buttonsStyling: false,
                             customClass: {

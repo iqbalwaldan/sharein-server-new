@@ -86,7 +86,7 @@ class ReminderController extends Controller
         } else {
             Reminder::find($id)->delete();
             return response()->json([
-                'message' => 'You have succesfully update reminder.',
+                'message' => 'You have succesfully delete reminder.',
             ], 200);
         }
     }

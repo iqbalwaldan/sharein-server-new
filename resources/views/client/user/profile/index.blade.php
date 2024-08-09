@@ -9,7 +9,7 @@
         <div class="relative w-full h-[280px] bg-[url('/assets/images/profile-bg.png')] bg-cover bg-center bg-no-repeat">
             <div class="absolute h-full top-1/3 2xl:top-1/2 h-full w-full flex justify-evenly">
                 <div
-                    class="h-[570px] 2xl:h-[570px] w-[20%] bg-white rounded-2xl border border-neutral-30 flex flex-col items-center shadow-lg">
+                    class="h-[550px] 2xl:h-[550px] w-[20%] bg-white rounded-2xl border border-neutral-30 flex flex-col items-center shadow-lg">
                     <div class="relative w-[100px] h-[100px] 2xl:w-[214px] 2xl:h-[214px] rounded-full mt-8"
                         style="background-image: url('{{ $profilePhoto ?: '/assets/icons/profile-user.png' }}'); background-size: cover;">
                         {{-- <div
@@ -28,7 +28,7 @@
                     </p>
                 </div>
                 <div
-                    class="h-[570px] 2xl:h-[570px] w-[70%] bg-white rounded-2xl border border-neutral-30 pt-8 px-10 flex flex-col gap-6 shadow-lg">
+                    class="relative h-[550px] 2xl:h-[550px] w-[70%] bg-white rounded-2xl border border-neutral-30 pt-8 px-10 flex flex-col gap-6 shadow-lg">
                     <div class="flex flex-row gap-8">
                         <div class="flex flex-col w-full">
                             <label for="first_name" class="flex mb-1">
@@ -132,8 +132,7 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="flex flex-row justify-end w-full items-center gap-6 mt-9">
+                    <div class="absolute bottom-8 right-10 flex flex-row justify-end w-full items-center gap-6">
                         <button id="cancel_update_button"
                             class="px-4 py-2 bg-[#EDEDED] text-neutral-base font-medium text-sm rounded-md">
                             Cancel
@@ -323,8 +322,8 @@
                                 imageUrl: "/assets/icons/alert-circle-success.png",
                                 imageHeight: 70,
                                 imageWidth: 70,
-                                title: "Successfully Update Reminder",
-                                text: "You have succesfully update reminder.",
+                                title: "Successfully Update Profile",
+                                text: "You have succesfully update profile.",
                                 confirmButtonText: "Okey",
                                 buttonsStyling: false,
                                 customClass: {
@@ -357,8 +356,8 @@
                                 imageUrl: "/assets/icons/alert-circle-danger.png",
                                 imageHeight: 70,
                                 imageWidth: 70,
-                                title: "Failed Update Reminder",
-                                text: "Sorry, the reminder failed to update.",
+                                title: "Failed Update Profile",
+                                text: "Sorry, the profile failed to update.",
                                 confirmButtonText: "Okey",
                                 buttonsStyling: false,
                                 customClass: {
