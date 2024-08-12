@@ -1,4 +1,4 @@
-<section class="w-full h-full bg-white px-24 py-20">
+<section id="join" class="w-full h-full bg-white px-24 py-20">
     <div class="flex flex-row items-center">
         <div class="h-full w-1/2 pr-28">
             <div class="flex flex-col">
