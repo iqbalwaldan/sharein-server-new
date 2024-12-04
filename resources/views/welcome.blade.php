@@ -5,7 +5,7 @@
     @include('partials.hero')
     @include('partials.reason')
     @include('partials.subscribe')
-    @include('partials.how')
+    {{-- @include('partials.how') --}}
     @include('partials.join')
     @include('partials.commitment')
     @include('partials.testimonial')

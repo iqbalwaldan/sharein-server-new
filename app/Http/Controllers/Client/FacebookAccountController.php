@@ -74,17 +74,18 @@ class FacebookAccountController extends Controller
         $facebook = FacebookAccount::find($id);
         $facebook->delete();
         // check cookie
-        self::updateCookies();
+        $facebookData = self::updateCookies();
+        return $facebookData;
     }
 
     public static function updateCookies()
     {
         $data = FacebookAccount::where('user_id', auth()->id())->get();
         if ($data->isEmpty()) {
-            Cookie::queue(Cookie::forget('facebookData'));
+            return response()->json(['success' => false, 'message' => 'No data found']);
         } else {
-            // Set cookie
-            setcookie('facebookData', DashboardController::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
+            $facebookData = DashboardController::fetchFacebookData();
+            return response()->json(['success' => true, 'facebookData' => $facebookData]);
         }
     }
 }

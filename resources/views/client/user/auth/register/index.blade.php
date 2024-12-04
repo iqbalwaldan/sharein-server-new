@@ -55,8 +55,8 @@
                             </div>
                             <input
                                 class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none w-full flex-grow h-11 rounded-md text-xs 2xl:text-base font-light"
-                                type="text" name="first_name" placeholder="your first name" :value="old('first_name')"
-                                required>
+                                type="text" name="first_name" placeholder="your first name"
+                                value="{{ old('first_name') }}" required>
                             @error('first_name')
                                 <span class="invalid-feedback" role="alert">
                                     <strong class="text-red-500 text-sm font-normal">{{ $message }}</strong>
@@ -74,7 +74,7 @@
                             </div>
                             <input
                                 class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none w-full flex-grow h-11 rounded-md text-xs 2xl:text-base font-light"
-                                type="text" name="last_name" placeholder="your last name" :value="old('last_name')"
+                                type="text" name="last_name" placeholder="your last name" value="{{ old('last_name') }}"
                                 required>
                             @error('last_name')
                                 <span class="invalid-feedback" role="alert">
@@ -95,7 +95,7 @@
                         </div>
                         <input
                             class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none w-full flex-grow h-11 rounded-md text-xs 2xl:text-base font-light"
-                            type="email" name="email" placeholder="your email" :value="old('email')" required>
+                            type="email" name="email" placeholder="your email" value="{{ old('email') }}" required>
                         @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong class="text-red-500 text-sm font-normal">{{ $message }}</strong>
@@ -141,7 +141,11 @@
                         <div class="relative">
                             <input
                                 class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none w-full flex-grow h-11 rounded-md text-xs 2xl:text-base font-light"
-                                type="password" name="password" placeholder="your password" required>
+                                id="password" type="password" name="password" placeholder="your password" required>
+                            <button type="button" id="showPassword"
+                                class="absolute right-3 top-3 text-primary-base font-light">
+                                <i class="fas fa-eye"></i>
+                            </button>
                             @error('password')
                                 <span class="invalid-feedback" role="alert">
                                     <strong class="text-red-500 text-sm font-normal">{{ $message }}</strong>
@@ -162,7 +166,12 @@
                         <div class="relative">
                             <input
                                 class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none w-full flex-grow h-11 rounded-md text-xs 2xl:text-base font-light"
-                                type="password" name="password_confirmation" placeholder="your password" required>
+                                id="passwordConfirmation" type="password" name="password_confirmation"
+                                placeholder="your password" required>
+                            <button type="button" id="showPasswordConfirmation"
+                                class="absolute right-3 top-3 text-primary-base font-light">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -183,4 +192,32 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts')
+    <script>
+        document.getElementById('showPassword').addEventListener('click', function() {
+            var passwordInput = document.getElementById('password');
+            var showPasswordButton = document.getElementById('showPassword');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showPasswordButton.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+            } else {
+                passwordInput.type = 'password';
+                showPasswordButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+        document.getElementById('showPasswordConfirmation').addEventListener('click', function() {
+            var passwordConfirmationInput = document.getElementById('passwordConfirmation');
+            var showPasswordConfirmationButton = document.getElementById('showPasswordConfirmation');
+
+            if (passwordConfirmationInput.type === 'password') {
+                passwordConfirmationInput.type = 'text';
+                showPasswordConfirmationButton.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+            } else {
+                passwordConfirmationInput.type = 'password';
+                showPasswordConfirmationButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+    </script>
 @endsection

@@ -9,19 +9,25 @@ use App\Models\Schedule;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
+use function Livewire\of;
+
 class ManageScheduleController extends Controller
 {
     public function index(Request $request)
     {
         if ($request->ajax()) {
+            // Data facebook
+            $data_facebook = json_decode($request->input('facebookData'), true);
+
+            // Pastikan data_facebook adalah array
+            if (!is_array($data_facebook)) {
+                $data_facebook = [];
+            }
+
             $schedule = Schedule::whereHas('post', function ($query) {
                 $query->where('user_id', auth()->id())
                     ->where('status', "scheduled");
             })->with(['reminder', 'post', 'post.media'])->latest();
-
-            // Data facebook
-            $page_facebook = new FacebookData();
-            $data_facebook = $page_facebook->getFacebookData();
 
             // Map Facebook data 
             $mappedDataPage = [];
@@ -50,12 +56,12 @@ class ManageScheduleController extends Controller
                     $scheduleItem['post']['page_name'] = 'Unknown';
                 }
             }
+
             return DataTables::of($schedules)
                 ->addIndexColumn()
                 ->addColumn('action', 'client.user.manage-schedule.action')
                 ->toJson();
         }
-
         $user = auth()->user();
         $profilePhoto = $user->getFirstMediaUrl('profile') ?: '/assets/icons/profile-user.png';
 
@@ -68,6 +74,7 @@ class ManageScheduleController extends Controller
 
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         if ($request->has('page_id')) {
             $request->validate([
                 'page_id' => 'required',
@@ -78,6 +85,7 @@ class ManageScheduleController extends Controller
             $post->update([
                 'page_id' => $request->page_id,
                 'caption' => $request->caption,
+                'page_token'=> $request->page_token,
             ]);
 
             if ($request->media != null) {
@@ -89,7 +97,6 @@ class ManageScheduleController extends Controller
                     ->usingFileName($file->getClientOriginalName())
                     ->toMediaCollection('post_photo', 'media/post');
             }
-            return redirect()->route('user.manage-schedule.index');
         } else {
             $request->validate([
                 'post_time' => 'required|date',
@@ -101,7 +108,6 @@ class ManageScheduleController extends Controller
             ]);
             $schedule->update($request->all());
         }
-        return redirect()->route('user.manage-schedule.index');
     }
 
     public function destroy($id)

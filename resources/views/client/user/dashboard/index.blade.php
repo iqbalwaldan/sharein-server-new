@@ -36,8 +36,8 @@
                 <p class="text-lg font-semibold text-primary-70">
                     Jumlah Page
                 </p>
-                <p class="text-2xl font-bold">
-                    {{ $totalPage }} Page
+                <p class="text-2xl font-bold" id="totalPage">
+                    0 Page
                 </p>
             </div>
             <div class="col-span-3 flex flex-col gap-1 p-4 h-full rounded-xl bg-white shadow-lg">
@@ -50,8 +50,8 @@
                 <p class="text-lg font-semibold text-primary-70 mb-2">
                     List Facebook Page
                 </p>
-                <div class="flex flex-col gap-2 overflow-y-auto">
-                    @foreach ($pageList as $item)
+                <div id="pageListContainer" class="flex flex-col gap-2 overflow-y-auto">
+                    {{-- @foreach ($pageList as $item)
                         <div class="flex flex-row gap-2 border border-2 border-primary-30 p-2 rounded-lg ">
                             <img src="assets\icons\facebook.png" class="w-10 h-10 rounded-full">
                             <div class="flex flex-col">
@@ -59,7 +59,7 @@
                                 <p class="text-xs text-primary-60">{{ $item['facebook_name'] }}</p>
                             </div>
                         </div>
-                    @endforeach
+                    @endforeach --}}
                 </div>
             </div>
             <div class="col-span-2 p-4 w-full rounded-xl bg-white shadow-lg">
@@ -139,11 +139,34 @@
                 localStorage.removeItem('pageReloaded');
             }
 
+            let selectedData = null;
+
+            // Data facebookData dari server
+            var facebookData = @json($facebookData);
+
+            // Simpan data ke Local Storage
+            if (facebookData) {
+                localStorage.setItem('facebookData', JSON.stringify(facebookData));
+            } else {
+                localStorage.removeItem('facebookData');
+            }
+
+            // Mengambil data Local Storage
+            var local = localStorage.getItem('facebookData');
+            var data = JSON.parse(local);
+            var total = 0;
+            if (data) {
+                total = data.length;
+            }
+            var jumlahPage = document.getElementById('totalPage');
+            jumlahPage.innerText = total + ' Page';
+
             var calendarEl = document.getElementById('calendar');
+            var today = new Date().toISOString().slice(0, 10);
             var calendarEvents = @json($calendarEvents);
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
-                initialDate: '2024-06-12',
+                initialDate: today,
                 eventColor: '#2652FF',
                 height: 610,
                 events: calendarEvents,
@@ -166,7 +189,34 @@
             });
             calendar.render();
 
-            let selectedData = null;
+            var pageListContainer = document.getElementById('pageListContainer');
+            if (data) {
+                data.forEach(function(item) {
+                    var itemElement = document.createElement('div');
+                    itemElement.className =
+                        'flex flex-row gap-2 border border-2 border-primary-30 p-2 rounded-lg';
+
+                    itemElement.innerHTML = `
+                        <img src="assets/icons/facebook.png" class="w-10 h-10 rounded-full">
+                        <div class="flex flex-col">
+                            <p class="font-semibold">${item.name} Page</p>
+                            <p class="text-xs text-primary-60">${item.facebook_name}</p>
+                        </div>
+                    `;
+
+                    pageListContainer.appendChild(itemElement);
+                });
+            } else {
+                var itemElement = document.createElement('div');
+                itemElement.className =
+                    'flex flex-row justify-center items-center border-t border-b border-primary-30 p-2';
+
+                itemElement.innerHTML = `
+                    <p class="font-normal">No data available</p>
+                    `;
+
+                pageListContainer.appendChild(itemElement);
+            }
 
             $('#table-schedule').DataTable({
                 paging: false, // Disable pagination
@@ -175,7 +225,14 @@
                 lengthChange: false, // Disable length change
                 processing: true,
                 serverSide: true,
-                ajax: '{{ httpToHttps(url()->current()) }}/schedules',
+                ajax: {
+                    url: '{{ httpToHttps(url()->current()) }}/schedules',
+                    type: 'GET',
+                    data: function(d) {
+                        d.facebookData =
+                            local; // Tambahkan data Facebook dari Local Storage ke permintaan
+                    }
+                },
                 columns: [{
                         data: null,
                         searchable: false,

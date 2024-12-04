@@ -33,7 +33,7 @@
                 <h1 class="font-bold text-3xl 2xl:text-4xl text-neutral-80 mb-2 2xl:mb-4">Sign In</h1>
                 <p class="text-xs 2xl:text-base font-light text-neutral-70">Welcome back! Please enter your details</p>
                 <form action="{{ route('user.loginPost') }}" method="POST">
-                {{-- <form action="/login" method="POST"> --}}
+                    {{-- <form action="/login" method="POST"> --}}
                     @csrf
                     <div class="flex flex-col mt-3 2xl:mt-6 w-full">
                         <div class="flex mb-1">
@@ -42,7 +42,7 @@
                         </div>
                         <input
                             class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none w-full flex-grow h-11 rounded-md text-xs 2xl:text-base font-light"
-                            type="email" name="email" placeholder="your email" :value="old('email')" required
+                            type="email" name="email" placeholder="your email" value="{{ old('email') }}" required
                             autofocus>
 
                     </div>
@@ -54,7 +54,11 @@
                         <div class="relative">
                             <input
                                 class="border border-[#CFCFCF] p-3 text-neutral-70 focus:outline-none w-full flex-grow h-11 rounded-md text-xs 2xl:text-base font-light"
-                                type="password" name="password" placeholder="your password" required>
+                                type="password" id="password" name="password" placeholder="your password" required>
+                            <button type="button" id="showPassword"
+                                class="absolute right-3 top-3 text-primary-base font-light">
+                                <i class="fas fa-eye"></i>
+                            </button>
                         </div>
                     </div>
                     {{-- @error('credentials')
@@ -105,5 +109,17 @@
                 width: '400px',
             });
         @endif
+        document.getElementById('showPassword').addEventListener('click', function() {
+            var passwordInput = document.getElementById('password');
+            var showPasswordButton = document.getElementById('showPassword');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showPasswordButton.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+            } else {
+                passwordInput.type = 'password';
+                showPasswordButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
     </script>
 @endsection

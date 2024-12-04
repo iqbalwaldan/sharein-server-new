@@ -21,13 +21,14 @@ class DashboardController extends Controller
     {
         // Check and set cookies
         $data = FacebookAccount::where('user_id', auth()->id())->get();
-        if ($data->isEmpty()) {
-            setcookie('facebookData', '', time() + (86400 * 30), "/"); // Cookie will expire in 30 days
-        }
-        if (!isset($_COOKIE['facebookData'])) {
-            // Set cookie
-            setcookie('facebookData', self::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
-        }
+        // if ($data->isEmpty()) {
+        //     setcookie('facebookData', '', time() + (86400 * 30), "/"); // Cookie will expire in 30 days
+        // }
+        // if (!isset($_COOKIE['facebookData'])) {
+        //     // Set cookie
+        //     setcookie('facebookData', self::fetchFacebookData(), time() + (86400 * 30), "/"); // Cookie will expire in 30 days
+        // }
+        $facebookData = $data->isEmpty() ? null : DashboardController::fetchFacebookData();
 
         // Total Schedule
         $totalSchedule = Schedule::whereHas('post', function ($query) {
@@ -39,11 +40,6 @@ class DashboardController extends Controller
 
         // Total Account
         $totalAccount = FacebookAccount::where('user_id', auth()->id())->count();
-
-        // Total Page
-        $facebookCookies = self::getFacebookData();
-        // dd($facebookCookies);
-        $totalPage = count($facebookCookies);
 
         // Calendar events
         $userId = auth()->id();
@@ -66,8 +62,6 @@ class DashboardController extends Controller
 
         $calendarEvents = array_merge($scheduleData, $reminderData);
 
-        $pageList = $facebookCookies;
-
         $user = auth()->user();
         $profilePhoto = $user->getFirstMediaUrl('profile') ?: '/assets/icons/profile-user.png';
 
@@ -77,10 +71,9 @@ class DashboardController extends Controller
             'totalSchedule' => $totalSchedule,
             'totalReminder' => $totalReminder,
             'totalAccount' => $totalAccount,
-            'totalPage' => $totalPage,
             'calendarEvents' => $calendarEvents,
-            'pageList' => $pageList,
             'profilePhoto' => $profilePhoto,
+            'facebookData' => $facebookData,
         ]);
     }
 
@@ -88,15 +81,23 @@ class DashboardController extends Controller
     {
         if ($request->ajax()) {
             // Schedule
+            
+            // Data facebook
+            $data_facebook = json_decode($request->input('facebookData'), true);
+
+            // Pastikan data_facebook adalah array
+            if (!is_array($data_facebook)) {
+                $data_facebook = [];
+            }
+
             $schedules = Schedule::whereHas('post', function ($query) {
                 $query->where('user_id', auth()->id())->where('status', 'scheduled');
             })
                 ->join('posts', 'posts.id', '=', 'schedules.post_id')
                 ->orderBy('post_time', 'asc')->limit(5);
 
-            $facebookCookies = self::getFacebookData();
             $mappedDataPage = [];
-            foreach ($facebookCookies as $value) {
+            foreach ($data_facebook as $value) {
                 $mappedDataPage[$value['id']] = $value['name'];
             }
 
@@ -181,11 +182,12 @@ class DashboardController extends Controller
         }
 
         // Encode data
-        $dataEncode = json_encode($facebookData);
+        // $dataEncode = json_encode($facebookData);
         // Encode data to base64
         // $base64Data = base64_encode($dataEncode);
         // return $base64Data;
-        return $dataEncode;
+        // return $dataEncode;
+        return $facebookData;
     }
 
     public static function getFacebookData()

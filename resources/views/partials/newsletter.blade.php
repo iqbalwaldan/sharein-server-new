@@ -1,4 +1,4 @@
-<section class="w-full h-full bg-white py-28">
+<section id="support" class="w-full h-full bg-white py-28">
     {{-- <form action="{{ route('subscribe') }}" method="POST"> --}}
     <form action="/" method="POST">
         @csrf

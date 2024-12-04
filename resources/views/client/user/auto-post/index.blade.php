@@ -172,7 +172,7 @@
                         </div>
                         <h3 id="title_detail_datetime" class="text-md font-semibold text-primary-70 mt-2">Datetime Page :
                         </h3>
-                        <p id="detail_datetime">dfdfd</p>
+                        <p id="detail_datetime"></p>
                     </div>
                 </div>
             </div>
@@ -197,10 +197,10 @@
 
         /* focus:outline-none focus:border-primary-base focus:ring-1 focus:ring-primary-base */
         /* .focus .ts-control {
-                                                            border-color: var(--primary-base) !important;
-                                                            outline: none !important;
-                                                            box-shadow: 0 0 0 1px var(--primary-base) !important;
-                                                        } */
+                                                                        border-color: var(--primary-base) !important;
+                                                                        outline: none !important;
+                                                                        box-shadow: 0 0 0 1px var(--primary-base) !important;
+                                                                    } */
 
         .ts-wrapper.multi .ts-control>div {
             cursor: pointer;
@@ -239,28 +239,53 @@
                 }
             });
 
-            // Fetch data and populate Tom Select
-            fetch("{{ route('user.dashboard.getFacebookData') }}")
-                .then(response => response.json())
-                .then(jsonData => {
-                    // Add each item to the Tom Select
-                    jsonData.forEach(item => {
-                        facebookPageSelect.addOption({
-                            value: JSON.stringify({
-                                id: item.id,
-                                name: item.name,
-                                page_access_token: item.page_access_token
-                            }),
-                            text: item.name
-                        });
-                    });
+            // // Fetch data and populate Tom Select
+            // fetch("{{ route('user.dashboard.getFacebookData') }}")
+            //     .then(response => response.json())
+            //     .then(jsonData => {
+            //         // Add each item to the Tom Select
+            //         jsonData.forEach(item => {
+            //             facebookPageSelect.addOption({
+            //                 value: JSON.stringify({
+            //                     id: item.id,
+            //                     name: item.name,
+            //                     page_access_token: item.page_access_token
+            //                 }),
+            //                 text: item.name
+            //             });
+            //         });
 
-                    // Refresh options
-                    facebookPageSelect.refreshOptions();
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
+            //         // Refresh options
+            //         facebookPageSelect.refreshOptions();
+            //     })
+            //     .catch(error => {
+            //         console.error('Error fetching data:', error);
+            //     });
+
+            // Ambil data dari Local Storage
+            var local = localStorage.getItem('facebookData');
+
+            // Cek apakah data ada di Local Storage
+            if (local) {
+                // Parse data dari JSON menjadi array
+                var jsonData = JSON.parse(local);
+
+                // Tambahkan setiap item ke Tom Select
+                jsonData.forEach(item => {
+                    facebookPageSelect.addOption({
+                        value: JSON.stringify({
+                            id: item.id,
+                            name: item.name,
+                            page_access_token: item.page_access_token
+                        }),
+                        text: item.name
+                    });
                 });
+
+                // Refresh options
+                facebookPageSelect.refreshOptions();
+            }
+
             // Onchage file input
             $('#file_input').change(function() {
                 preview();
@@ -420,7 +445,10 @@
                 //     return;
                 // }
                 if ($('#toggle_datetime').is(':checked')) {
-                    $('#detail_datetime').text($('#input_datetime').val());
+                    var dateTime = $('#input_datetime').val();
+                    var dateTimeParts = dateTime.split('T');
+                    var formattedDateTime = dateTimeParts.join(' ');
+                    $('#detail_datetime').text(formattedDateTime);
                     $('#title_detail_datetime').removeClass('hidden');
                 } else {
                     $('#title_detail_datetime').addClass('hidden');
@@ -475,13 +503,12 @@
                     }
                 });
                 $.ajax({
+                    url: "{{ httpToHttps(url()->current()) }}",
                     type: 'POST',
-                    url: "{{ route('user.auto-post.store') }}",
                     data: formData,
                     contentType: false, // Important: Don't set contentType
                     processData: false, // Important: Don't process the data
                     success: function(response) {
-                        console.log(response);
                         Swal.fire({
                             imageUrl: "/assets/icons/alert-circle-success.png",
                             imageHeight: 70,

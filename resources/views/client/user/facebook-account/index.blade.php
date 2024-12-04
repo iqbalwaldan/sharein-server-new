@@ -10,7 +10,7 @@
             {{-- <a href="/auth/facebook">Add</a> --}}
             <button type="button" id="update-cookies-button"
                 class="bg-primary-base  h-[30px]  rounded-md px-4 text-sm font-semibold text-white">
-                Update Cookies
+                Update Data
             </button>
             <button type="button" id="add-facebook-button"
                 class="bg-primary-base h-[30px] rounded-md px-4 text-sm font-semibold text-white">
@@ -177,13 +177,15 @@
                         _token: '{{ csrf_token() }}'
                     },
                     success: function(response) {
-                        console.log(response);
+                        // Update local storage
+                        localStorage.setItem('facebookData', JSON.stringify(response
+                            .facebookData));
                         Swal.fire({
                             imageUrl: "/assets/icons/alert-circle-success.png",
                             imageHeight: 70,
                             imageWidth: 70,
-                            title: "Successfully Update Cookies",
-                            text: "You have succesfully update cookies.",
+                            title: "Successfully Update Data Facebook",
+                            text: "You have succesfully update data facebook.",
                             confirmButtonText: "Okey",
                             buttonsStyling: false,
                             customClass: {
@@ -395,7 +397,6 @@
                             type: 'POST',
                             data: updatedData,
                             success: function(response) {
-                                console.log(response);
                                 $('#modal-edit').addClass('hidden');
                                 $('#table-token-facebook').DataTable().ajax.reload();
                                 $('#user-access-token-edit').val('');
@@ -498,8 +499,10 @@
                         url: url.replace('defaultId', selectedData.id),
                         type: 'DELETE',
                         success: function(response) {
-                            console.log(response);
                             $('#table-token-facebook').DataTable().ajax.reload();
+                            // Update local storage
+                            localStorage.setItem('facebookData', JSON.stringify(response
+                                .facebookData));
                             Swal.fire({
                                 imageUrl: "/assets/icons/alert-circle-success.png",
                                 imageHeight: 70,

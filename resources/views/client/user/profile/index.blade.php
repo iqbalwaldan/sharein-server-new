@@ -9,7 +9,7 @@
         <div class="relative w-full h-[280px] bg-[url('/assets/images/profile-bg.png')] bg-cover bg-center bg-no-repeat">
             <div class="absolute h-full top-1/3 2xl:top-1/2 h-full w-full flex justify-evenly">
                 <div
-                    class="h-[570px] 2xl:h-[570px] w-[20%] bg-white rounded-2xl border border-neutral-30 flex flex-col items-center shadow-lg">
+                    class="h-[550px] 2xl:h-[550px] w-[20%] bg-white rounded-2xl border border-neutral-30 flex flex-col items-center shadow-lg">
                     <div class="relative w-[100px] h-[100px] 2xl:w-[214px] 2xl:h-[214px] rounded-full mt-8"
                         style="background-image: url('{{ $profilePhoto ?: '/assets/icons/profile-user.png' }}'); background-size: cover;">
                         {{-- <div
@@ -28,7 +28,7 @@
                     </p>
                 </div>
                 <div
-                    class="h-[570px] 2xl:h-[570px] w-[70%] bg-white rounded-2xl border border-neutral-30 pt-8 px-10 flex flex-col gap-6 shadow-lg">
+                    class="relative h-[550px] 2xl:h-[550px] w-[70%] bg-white rounded-2xl border border-neutral-30 pt-8 px-10 flex flex-col gap-6 shadow-lg">
                     <div class="flex flex-row gap-8">
                         <div class="flex flex-col w-full">
                             <label for="first_name" class="flex mb-1">
@@ -110,8 +110,12 @@
                                 <input id="password"
                                     class="border border-primary-40 p-3 text-neutral-70 focus:outline-none h-12 rounded-md text-sm font-light w-full"
                                     type="password" placeholder="your old password" />
+                                <button type="button" id="showPassword"
+                                    class="absolute right-3 top-3 text-primary-base font-light">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                                 <span id="password_check"
-                                    class="hidden absolute right-3 top-[25px] transform -translate-y-1/2 text-green-500"><i
+                                    class="hidden absolute right-10 top-[25px] transform -translate-y-1/2 text-green-500"><i
                                         class="fa-solid fa-circle-check"></i></span>
                             </div>
                         </div>
@@ -121,13 +125,14 @@
                                     New Password
                                 </p>
                             </label>
-                            <input id="new_password"
-                                class="border border-primary-40 p-3 text-neutral-70 focus:outline-none h-12 rounded-md text-sm font-light w-full focus:outline-none focus:ring-1 focus:ring-primary-base"
-                                type="text" placeholder="your new password" />
+                            <div class="relative">
+                                <input id="new_password"
+                                    class="border border-primary-40 p-3 text-neutral-70 focus:outline-none h-12 rounded-md text-sm font-light w-full focus:outline-none focus:ring-1 focus:ring-primary-base"
+                                    type="text" placeholder="your new password" />
+                            </div>
                         </div>
                     </div>
-
-                    <div class="flex flex-row justify-end w-full items-center gap-6 mt-9">
+                    <div class="absolute bottom-8 right-10 flex flex-row justify-end w-full items-center gap-6">
                         <button id="cancel_update_button"
                             class="px-4 py-2 bg-[#EDEDED] text-neutral-base font-medium text-sm rounded-md">
                             Cancel
@@ -154,10 +159,13 @@
                 $('#last_name').val('{{ auth()->user()->last_name }}').removeClass(['border-red-500',
                     'border-green-500'
                 ]);
+                $('#file_input').val('');
                 $('#email').val('{{ auth()->user()->email }}').removeClass(['border-red-500', 'border-green-500']);
                 $('#phone_number').val('{{ auth()->user()->phone_number }}').removeClass(['border-red-500',
                     'border-green-500'
                 ]);
+                $('#password').val('');
+                $('#new_password').val('');
                 $('#password').removeClass(['border-red-500', 'border-green-500']);
 
                 $('#first_name_check').addClass('hidden');
@@ -314,8 +322,8 @@
                                 imageUrl: "/assets/icons/alert-circle-success.png",
                                 imageHeight: 70,
                                 imageWidth: 70,
-                                title: "Successfully Update Reminder",
-                                text: "You have succesfully update reminder.",
+                                title: "Successfully Update Profile",
+                                text: "You have succesfully update profile.",
                                 confirmButtonText: "Okey",
                                 buttonsStyling: false,
                                 customClass: {
@@ -348,8 +356,8 @@
                                 imageUrl: "/assets/icons/alert-circle-danger.png",
                                 imageHeight: 70,
                                 imageWidth: 70,
-                                title: "Failed Update Reminder",
-                                text: "Sorry, the reminder failed to update.",
+                                title: "Failed Update Profile",
+                                text: "Sorry, the profile failed to update.",
                                 confirmButtonText: "Okey",
                                 buttonsStyling: false,
                                 customClass: {
@@ -363,8 +371,18 @@
                     });
                 }
             });
+        });
+        document.getElementById('showPassword').addEventListener('click', function() {
+            var passwordInput = document.getElementById('password');
+            var showPasswordButton = document.getElementById('showPassword');
 
-
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showPasswordButton.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+            } else {
+                passwordInput.type = 'password';
+                showPasswordButton.innerHTML = '<i class="fas fa-eye"></i>';
+            }
         });
     </script>
 @endsection

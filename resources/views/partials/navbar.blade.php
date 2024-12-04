@@ -16,19 +16,19 @@
                         Why us
                     </li>
                 </a>
-                <a href="#features">
+                <a href="#join">
                     <li class="ml-10 text-xl font-semibold">
-                        Features
+                        Let's Join
                     </li>
                 </a>
-                <a href="{{ url('/pricing') }}">
+                <a href="#testimonial">
                     <li class="ml-10 text-xl font-semibold">
-                        Pricing
+                        Testimoni
                     </li>
                 </a>
-                <a href="{{ url('/resources') }}">
+                <a href="#support">
                     <li class="ml-10 text-xl font-semibold">
-                        Resources
+                        Support
                     </li>
                 </a>
                 <a href="{{ route('user.register') }}">

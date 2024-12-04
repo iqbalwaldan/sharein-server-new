@@ -133,7 +133,6 @@ class AutoPostController extends Controller
 
         // Wait for all requests to complete
         Utils::settle($promises)->wait();
-        return redirect()->route('user.auto-post.index');
     }
 
     public function schedulePost()
